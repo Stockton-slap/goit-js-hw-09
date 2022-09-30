@@ -44,7 +44,7 @@ const options = {
 };
 
 function onStartBtnClick() {
-  intervalId = null;
+  let intervalId = null;
 
   intervalId = setInterval(() => {
     const pickedTime = Date.now();
