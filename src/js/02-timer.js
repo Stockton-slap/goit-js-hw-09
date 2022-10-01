@@ -1,4 +1,5 @@
 import flatpickr from 'flatpickr';
+import Notiflix from 'notiflix';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const refs = {
@@ -14,16 +15,6 @@ const refs = {
 
 refs.btn.setAttribute('disabled', null);
 
-refs.btn.style.display = 'flex';
-refs.btn.style.margin = '20px auto';
-refs.btn.style.padding = '10px 20px';
-refs.btn.style.fontSize = 'xx-large';
-
-refs.input.style.display = 'flex';
-refs.input.style.margin = '0 auto';
-refs.input.style.fontSize = 'xxx-large';
-refs.input.style.textAlign = 'center';
-
 let timerDeadline = null;
 
 const options = {
@@ -35,7 +26,8 @@ const options = {
     timerDeadline = selectedDates[0].getTime();
 
     if (timerDeadline < Date.now()) {
-      window.alert('Please choose a date in the future');
+      //   window.alert('Please choose a date in the future');
+      Notiflix.Notify.failure('Please choose a date in the future');
     } else {
       refs.btn.removeAttribute('disabled');
       refs.btn.addEventListener('click', onStartBtnClick);
@@ -47,20 +39,23 @@ function onStartBtnClick() {
   let intervalId = null;
 
   intervalId = setInterval(() => {
-    const pickedTime = Date.now();
-    const timeDifference = timerDeadline - pickedTime;
+    const currentTime = Date.now();
+    const timeDifference = timerDeadline - currentTime;
 
     const timeComponents = convertMs(timeDifference);
     const { days, hours, minutes, seconds } = timeComponents;
-
-    if (seconds <= 0) {
-      clearInterval(intervalId);
-    }
 
     refs.days.textContent = addLeadingZero(`${days}`);
     refs.hours.textContent = addLeadingZero(`${hours}`);
     refs.mins.textContent = addLeadingZero(`${minutes}`);
     refs.secs.textContent = addLeadingZero(`${seconds}`);
+
+    const zeroTime =
+      days === 00 && hours === 00 && minutes === 00 && seconds === 00;
+
+    if (zeroTime) {
+      clearInterval(intervalId);
+    }
   }, 1000);
 }
 
@@ -78,6 +73,10 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
+}
+
 flatpickr(refs.input, options);
 
 refs.timer.style.display = 'flex';
@@ -86,6 +85,16 @@ refs.timer.style.fontSize = 'xxx-large';
 refs.timer.style.border = 'black 2px solid';
 refs.timer.style.marginTop = '20px';
 
-function addLeadingZero(value) {
-  return String(value).padStart(2, '0');
-}
+refs.btn.style.display = 'flex';
+refs.btn.style.margin = '20px auto';
+refs.btn.style.padding = '10px 20px';
+refs.btn.style.fontSize = 'xx-large';
+
+refs.input.style.display = 'flex';
+refs.input.style.margin = '0 auto';
+refs.input.style.fontSize = 'xxx-large';
+refs.input.style.textAlign = 'center';
+
+// когда доходит до 00 - останавливается ===
+// когда нажимаешь на старт - ждет секунду а потом запускает таймер
+// не использовался minuteIncrement
