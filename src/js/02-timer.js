@@ -13,7 +13,7 @@ const refs = {
   timer: document.querySelector('.timer'),
 };
 
-refs.btn.setAttribute('disabled', null);
+refs.btn.setAttribute('disabled', true);
 
 let timerDeadline = null;
 
@@ -34,24 +34,33 @@ const options = {
   },
 };
 
+function changeTimer(interval) {
+  const currentTime = Date.now();
+
+  const timeDifference = timerDeadline - currentTime;
+
+  const timeComponents = convertMs(timeDifference);
+  const { days, hours, minutes, seconds } = timeComponents;
+
+  if (timeDifference < 0) {
+    return clearInterval(interval);
+  }
+
+  refs.days.textContent = addLeadingZero(`${days}`);
+  refs.hours.textContent = addLeadingZero(`${hours}`);
+  refs.mins.textContent = addLeadingZero(`${minutes}`);
+  refs.secs.textContent = addLeadingZero(`${seconds}`);
+}
+
 function onStartBtnClick() {
   let intervalId = null;
 
+  refs.btn.setAttribute('disabled', true);
+
+  changeTimer(intervalId);
+
   intervalId = setInterval(() => {
-    const currentTime = Date.now();
-    const timeDifference = timerDeadline - currentTime;
-
-    const timeComponents = convertMs(timeDifference);
-    const { days, hours, minutes, seconds } = timeComponents;
-
-    refs.days.textContent = addLeadingZero(`${days}`);
-    refs.hours.textContent = addLeadingZero(`${hours}`);
-    refs.mins.textContent = addLeadingZero(`${minutes}`);
-    refs.secs.textContent = addLeadingZero(`${seconds}`);
-    console.log(days, hours, minutes, seconds);
-    if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
-      clearInterval(intervalId);
-    }
+    changeTimer(intervalId);
   }, 1000);
 }
 
@@ -90,7 +99,3 @@ refs.input.style.display = 'flex';
 refs.input.style.margin = '0 auto';
 refs.input.style.fontSize = 'xxx-large';
 refs.input.style.textAlign = 'center';
-
-// когда доходит до 00 - останавливается ===
-// когда нажимаешь на старт - ждет секунду а потом запускает таймер
-// не использовался minuteIncrement
