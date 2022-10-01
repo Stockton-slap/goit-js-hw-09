@@ -26,7 +26,6 @@ const options = {
     timerDeadline = selectedDates[0].getTime();
 
     if (timerDeadline < Date.now()) {
-      //   window.alert('Please choose a date in the future');
       Notiflix.Notify.failure('Please choose a date in the future');
     } else {
       refs.btn.removeAttribute('disabled');
@@ -49,8 +48,8 @@ function onStartBtnClick() {
     refs.hours.textContent = addLeadingZero(`${hours}`);
     refs.mins.textContent = addLeadingZero(`${minutes}`);
     refs.secs.textContent = addLeadingZero(`${seconds}`);
-
-    if (days === 00 && hours === 00 && minutes === 00 && seconds === 00) {
+    console.log(days, hours, minutes, seconds);
+    if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
       clearInterval(intervalId);
     }
   }, 1000);
