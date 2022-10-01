@@ -50,10 +50,7 @@ function onStartBtnClick() {
     refs.mins.textContent = addLeadingZero(`${minutes}`);
     refs.secs.textContent = addLeadingZero(`${seconds}`);
 
-    const zeroTime =
-      days === 00 && hours === 00 && minutes === 00 && seconds === 00;
-
-    if (zeroTime) {
+    if (days === 00 && hours === 00 && minutes === 00 && seconds === 00) {
       clearInterval(intervalId);
     }
   }, 1000);
